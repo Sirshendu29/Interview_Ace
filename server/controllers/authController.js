@@ -7,7 +7,7 @@ const InterviewResult = require('../models/InterviewResult');
 const generateToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, name: user.name },
-    process.env.JWT_SECRET,
+    process.env.JWT_SECRET || 'my_secret_key_123456789',
     { expiresIn: '7d' }
   );
 };

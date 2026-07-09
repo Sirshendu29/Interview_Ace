@@ -10,7 +10,7 @@ const protect = (req, res, next) => {
   const token = authHeader.split(' ')[1];
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'my_secret_key_123456789');
     req.user = decoded;
     next();
   } catch (err) {
