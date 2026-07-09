@@ -59,8 +59,8 @@ const register = async (req, res) => {
       user: sanitizeUser(user)
     });
   } catch (error) {
-    console.error('Register error:', error.message);
-    res.status(500).json({ success: false, message: 'Server error during registration' });
+    console.error('Register error:', error.stack || error.message);
+    res.status(500).json({ success: false, message: 'Server error during registration', error: error.message, stack: error.stack });
   }
 };
 
@@ -97,8 +97,8 @@ const login = async (req, res) => {
       user: sanitizeUser(user)
     });
   } catch (error) {
-    console.error('Login error:', error.message);
-    res.status(500).json({ success: false, message: 'Server error during login' });
+    console.error('Login error:', error.stack || error.message);
+    res.status(500).json({ success: false, message: 'Server error during login', error: error.message, stack: error.stack });
   }
 };
 

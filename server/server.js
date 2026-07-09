@@ -19,7 +19,7 @@ const app = express();
 
 // ─── Middleware ──────────────────────────────────────────────────────────────
 
-// CORS — allow Vite dev servers and production client URL
+// CORS — allow Vite dev servers, Netlify subdomains, and configured CLIENT_URL
 const allowedOrigins = [
   'http://localhost:5173',
   'http://localhost:5174',
@@ -29,7 +29,16 @@ const allowedOrigins = [
 app.use(
   cors({
     origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin) || process.env.NODE_ENV === 'development') {
+      if (!origin) {
+        return callback(null, true);
+      }
+      
+      const isLocalhost = origin.startsWith('http://localhost:');
+      const isNetlify = origin.endsWith('.netlify.app');
+      const isAllowedConfig = allowedOrigins.includes(origin);
+      const isDev = process.env.NODE_ENV === 'development';
+
+      if (isLocalhost || isNetlify || isAllowedConfig || isDev) {
         callback(null, true);
       } else {
         callback(new Error('Not allowed by CORS'));
@@ -65,10 +74,12 @@ app.use('/api/interview', interviewRoutes);
 
 // Health check
 app.get('/api/health', (req, res) => {
+  const mongoose = require('mongoose');
   res.status(200).json({
     success: true,
     message: 'InterviewAce API is running',
     environment: process.env.NODE_ENV,
+    database: mongoose.connection.readyState, // 0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting
     timestamp: new Date().toISOString()
   });
 });
