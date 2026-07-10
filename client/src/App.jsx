@@ -22,7 +22,7 @@ import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
-import './app.css';
+import './App.css';
 
 const App = () => {
   return (
